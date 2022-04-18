@@ -20,14 +20,7 @@ public class CustomEncoder
             }
             else if (type.IsArray)
             {
-                var arrayBuilder = new StringBuilder();
-                foreach (var item in (Array) value)
-                {
-                    arrayBuilder.Append(item is string
-                        ? TextToAppend(arrayBuilder, $"\"{item}\"")
-                        : TextToAppend(arrayBuilder, $"{item}"));
-                }
-                jsonBuilder.Append(TextToAppend(jsonBuilder,$"\"{name}\":[{arrayBuilder}]"));
+                BuildArrayBlob(value, jsonBuilder, name);
             }
             else
             {
@@ -36,6 +29,19 @@ public class CustomEncoder
         }
         
         return "{" + jsonBuilder + "}";
+    }
+
+    private void BuildArrayBlob(object value, StringBuilder jsonBuilder, string name)
+    {
+        var arrayBuilder = new StringBuilder();
+        foreach (var item in (Array) value)
+        {
+            arrayBuilder.Append(item is string
+                ? TextToAppend(arrayBuilder, $"\"{item}\"")
+                : TextToAppend(arrayBuilder, $"{item}"));
+        }
+
+        jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":[{arrayBuilder}]"));
     }
 
     private string TextToAppend(StringBuilder jsonBlob, string text)

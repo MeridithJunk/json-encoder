@@ -19,7 +19,7 @@ public class CustomEncoder
         return "{" + jsonBuilder + "}";
     }
 
-    private void BreakdownJsonObject(StringBuilder jsonBuilder, string name, object value)
+    private static void BreakdownJsonObject(StringBuilder jsonBuilder, string name, object value)
     {
         var type = value.GetType();
         if (type == typeof(string))
@@ -51,7 +51,7 @@ public class CustomEncoder
         }
     }
 
-    private void BuildArrayBlob(object value, StringBuilder jsonBuilder, string name)
+    private static void BuildArrayBlob(object value, StringBuilder jsonBuilder, string name)
     {
         var arrayBuilder = new StringBuilder();
         foreach (var item in (Array) value)
@@ -64,7 +64,7 @@ public class CustomEncoder
         jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":[{arrayBuilder}]"));
     }
 
-    private string TextToAppend(StringBuilder jsonBlob, string text)
+    private static string TextToAppend(StringBuilder jsonBlob, string text)
     {
         return jsonBlob.Length == 0 ? text : $",{text}";
     }

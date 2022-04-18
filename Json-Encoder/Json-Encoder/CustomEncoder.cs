@@ -15,7 +15,7 @@ public class CustomEncoder
             var value = propertyInfo.GetValue(objectToBeEncoded, null);
             BreakdownJsonObject(jsonBuilder, name, value);
         }
-        
+
         return "{" + jsonBuilder + "}";
     }
 
@@ -37,16 +37,17 @@ public class CustomEncoder
         else
         {
             var subProperties = value.GetType().GetProperties();
-                var objectBuilder = new StringBuilder();
-                jsonBuilder.Append($"\"{name}\":" + "{");
-                foreach (var subProperty in subProperties)
-                {
-                    var subName = subProperty.Name;
-                    var subPropertyInfo = type.GetProperty(subName);
-                    var subValue = subPropertyInfo.GetValue(value, null);
-                    BreakdownJsonObject(objectBuilder, subName, subValue);
-                }
-                jsonBuilder.Append($"{objectBuilder}" + '}');
+            var objectBuilder = new StringBuilder();
+            jsonBuilder.Append($"\"{name}\":" + "{");
+            foreach (var subProperty in subProperties)
+            {
+                var subName = subProperty.Name;
+                var subPropertyInfo = type.GetProperty(subName);
+                var subValue = subPropertyInfo.GetValue(value, null);
+                BreakdownJsonObject(objectBuilder, subName, subValue);
+            }
+
+            jsonBuilder.Append($"{objectBuilder}" + '}');
         }
     }
 

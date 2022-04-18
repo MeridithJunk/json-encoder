@@ -14,9 +14,9 @@ public class CustomEncoder
             var propertyInfo = objectToBeEncoded.GetType().GetProperty(name);
             var value = propertyInfo.GetValue(objectToBeEncoded, null);
             var type = value.GetType();
-            if (_numericTypes.Contains(type))
+            if (type == typeof(string))
             {
-                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":{value}"));
+                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":\"{value}\""));
             }
             else if (type.IsArray)
             {
@@ -31,7 +31,7 @@ public class CustomEncoder
             }
             else
             {
-                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":\"{value}\""));
+                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":{value}"));
             }
         }
         
@@ -42,9 +42,4 @@ public class CustomEncoder
     {
         return jsonBlob.Length == 0 ? text : $",{text}";
     }
-
-    readonly HashSet<Type> _numericTypes = new()
-    {
-        typeof(int), typeof(byte), typeof(double)
-    };
 }

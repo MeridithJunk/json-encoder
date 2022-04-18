@@ -7,7 +7,7 @@ public class CustomEncoder
     public string Create(object objectToBeEncoded)
     {
         var properties = objectToBeEncoded.GetType().GetProperties();
-        var stringBuilder = new StringBuilder();
+        var jsonBuilder = new StringBuilder();
         foreach (var property in properties)
         {
             var name = property.Name;
@@ -16,22 +16,26 @@ public class CustomEncoder
             var type = value.GetType();
             if (_numericTypes.Contains(type))
             {
-                stringBuilder.Append(TextToAppend(stringBuilder, $"\"{name}\":{value}"));
+                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":{value}"));
             }
-            else if (type == typeof(string[]))
+            else if (type.IsArray)
             {
-                foreach (var item in (string[]) value)
+                var arrayBuilder = new StringBuilder();
+                foreach (var item in (Array) value)
                 {
-                    stringBuilder.Append(TextToAppend(stringBuilder, $"\"{name}\":[\"{item}\"]"));
+                    arrayBuilder.Append(item is string
+                        ? TextToAppend(arrayBuilder, $"\"{item}\"")
+                        : TextToAppend(arrayBuilder, $"{item}"));
                 }
+                jsonBuilder.Append($"\"{name}\":[{arrayBuilder}]");
             }
             else
             {
-                stringBuilder.Append(TextToAppend(stringBuilder, $"\"{name}\":\"{value}\""));
+                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":\"{value}\""));
             }
         }
         
-        return "{" + stringBuilder + "}";
+        return "{" + jsonBuilder + "}";
     }
 
     private string TextToAppend(StringBuilder jsonBlob, string text)

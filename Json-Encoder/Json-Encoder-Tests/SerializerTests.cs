@@ -1,31 +1,29 @@
 using Json_Encoder;
 using Newtonsoft.Json;
-
-namespace Json_Encoder_Tests;
 using Xunit;
 
-
-public class UnitTest1
+namespace Json_Encoder_Tests;
+public class SerializerTests
 {
-    TestItem example = new()
+    private readonly CustomEncoder _sut;
+    public SerializerTests()
     {
-        testString = "something"
-    };
-    
+        _sut = new CustomEncoder();
+    }
+
     [Fact]
     public void GivenAnObjectWithOneStringPropertyReturnEncodedJsonString()
     {
-        var sut = new CustomEncoder();
-        var actual = sut.Create(example);
-        Assert.Equal(JsonConvert.SerializeObject(example), actual);
+        var objectToBeEncoded = new {something = "something"};
+        var actual = _sut.Create(objectToBeEncoded);
+        Assert.Equal(JsonConvert.SerializeObject(objectToBeEncoded), actual);
     }
     
     [Fact]
     public void GivenAnObjectWithMultipleStringPropertiesReturnEncodedJsonString()
     {
-        var sut = new CustomEncoder();
         var objectWithMultipleStringProps = new {anotherThing = "somethingElse", moo = "cow"};
-        var actual = sut.Create(objectWithMultipleStringProps);
+        var actual = _sut.Create(objectWithMultipleStringProps);
         Assert.Equal(JsonConvert.SerializeObject(objectWithMultipleStringProps), actual);
     }
 }

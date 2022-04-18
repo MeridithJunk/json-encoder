@@ -13,11 +13,21 @@ public class CustomEncoder
             var name = property.Name;
             var propertyInfo = objectToBeEncoded.GetType().GetProperty(name);
             var value = propertyInfo.GetValue(objectToBeEncoded, null);
-            if (_numericTypes.Contains(value.GetType()))
+            var type = value.GetType();
+            if (_numericTypes.Contains(type))
             {
                 stringBuilder.Append(stringBuilder.Length == 0
                     ?  $"\"{name}\":{value}"
                     : $",\"{name}\":{value}");  
+            }
+            else if (type == typeof(string[]))
+            {
+                foreach (var item in (string[]) value)
+                {
+                    stringBuilder.Append(stringBuilder.Length == 0
+                        ? $"\"{name}\":[\"{item}\"]"
+                        : $",\"{name}\":[\"{item}\"]");
+                }
             }
             else
             {

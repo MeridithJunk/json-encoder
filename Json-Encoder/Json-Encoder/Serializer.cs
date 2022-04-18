@@ -2,7 +2,7 @@ using System.Text;
 
 namespace Json_Encoder;
 
-public class CustomEncoder
+public class Serializer
 {
     public string Create(object objectToBeEncoded)
     {

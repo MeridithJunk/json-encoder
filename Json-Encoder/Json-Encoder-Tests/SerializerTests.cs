@@ -6,11 +6,11 @@ namespace Json_Encoder_Tests;
 
 public class SerializerTests
 {
-    private readonly CustomEncoder _sut;
+    private readonly Serializer _sut;
 
     public SerializerTests()
     {
-        _sut = new CustomEncoder();
+        _sut = new Serializer();
     }
 
     [Fact]
@@ -99,6 +99,14 @@ public class SerializerTests
     public void GivenAnObjectWithAnObjectWithMultipleTypesValueReturnEncodedJsonString()
     {
         var numberArray = new {why = new {test = "this", another = 1, something = new {moo = "cow"}}};
+        var actual = _sut.Create(numberArray);
+        Assert.Equal(JsonConvert.SerializeObject(numberArray), actual);
+    }
+    
+    [Fact]
+    public void GivenAnObjectWithAnObjectWithAllTypesValueReturnEncodedJsonString()
+    {
+        var numberArray = new {why = new {test = "this", another = 1, something = new {moo = "cow"}, array = new[] {1,35}}};
         var actual = _sut.Create(numberArray);
         Assert.Equal(JsonConvert.SerializeObject(numberArray), actual);
     }

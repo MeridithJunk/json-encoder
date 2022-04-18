@@ -14,21 +14,42 @@ public class CustomEncoder
             var propertyInfo = objectToBeEncoded.GetType().GetProperty(name);
             var value = propertyInfo.GetValue(objectToBeEncoded, null);
             var type = value.GetType();
-            if (type == typeof(string))
+            if (type == typeof(object))
             {
-                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":\"{value}\""));
-            }
-            else if (type.IsArray)
-            {
-                BuildArrayBlob(value, jsonBuilder, name);
+                var subProperties = value.GetType().GetProperties();
+                foreach (var subProperty in subProperties)
+                {
+                    var subName = subProperty.Name;
+                    var subPropertyInfo = value.GetType().GetProperty(subName);
+                    var subValue = subPropertyInfo.GetValue(value, null);
+                    var subType = subValue.GetType();
+                    BreakdownStringArrayOrNumber(subType, jsonBuilder, subName, subValue);
+                }
+
             }
             else
             {
-                jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":{value}"));
+                BreakdownStringArrayOrNumber(type, jsonBuilder, name, value);
             }
         }
         
         return "{" + jsonBuilder + "}";
+    }
+
+    private void BreakdownStringArrayOrNumber(Type type, StringBuilder jsonBuilder, string name, object value)
+    {
+        if (type == typeof(string))
+        {
+            jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":\"{value}\""));
+        }
+        else if (type.IsArray)
+        {
+            BuildArrayBlob(value, jsonBuilder, name);
+        }
+        else
+        {
+            jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":{value}"));
+        }
     }
 
     private void BuildArrayBlob(object value, StringBuilder jsonBuilder, string name)

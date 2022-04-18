@@ -38,7 +38,7 @@ public class CustomEncoder
         {
             var subProperties = value.GetType().GetProperties();
             var objectBuilder = new StringBuilder();
-            jsonBuilder.Append($"\"{name}\":" + "{");
+            jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":" + "{"));
             foreach (var subProperty in subProperties)
             {
                 var subName = subProperty.Name;

@@ -94,4 +94,12 @@ public class SerializerTests
         var actual = _sut.Create(numberArray);
         Assert.Equal(JsonConvert.SerializeObject(numberArray), actual);
     }
+    
+    [Fact]
+    public void GivenAnObjectWithAnObjectWithMultipleTypesValueReturnEncodedJsonString()
+    {
+        var numberArray = new {why = new {test = "this", another = 1, something = new {moo = "cow"}}};
+        var actual = _sut.Create(numberArray);
+        Assert.Equal(JsonConvert.SerializeObject(numberArray), actual);
+    }
 }

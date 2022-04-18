@@ -13,7 +13,7 @@ public class CustomEncoder
             var name = property.Name;
             var propertyInfo = objectToBeEncoded.GetType().GetProperty(name);
             var value = propertyInfo.GetValue(objectToBeEncoded, null);
-            if (NumericTypes.Contains(value.GetType()))
+            if (_numericTypes.Contains(value.GetType()))
             {
                 stringBuilder.Append(stringBuilder.Length == 0
                     ?  $"\"{name}\":{value}"
@@ -29,9 +29,9 @@ public class CustomEncoder
         
         return "{" + stringBuilder + "}";
     }
-    
-    HashSet<Type> NumericTypes = new()
+
+    readonly HashSet<Type> _numericTypes = new()
     {
-        typeof(int), typeof(byte)
+        typeof(int), typeof(byte), typeof(double)
     };
 }

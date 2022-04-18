@@ -13,31 +13,15 @@ public class CustomEncoder
             var name = property.Name;
             var propertyInfo = objectToBeEncoded.GetType().GetProperty(name);
             var value = propertyInfo.GetValue(objectToBeEncoded, null);
-            var type = value.GetType();
-            if (type == typeof(object))
-            {
-                var subProperties = value.GetType().GetProperties();
-                foreach (var subProperty in subProperties)
-                {
-                    var subName = subProperty.Name;
-                    var subPropertyInfo = value.GetType().GetProperty(subName);
-                    var subValue = subPropertyInfo.GetValue(value, null);
-                    var subType = subValue.GetType();
-                    BreakdownStringArrayOrNumber(subType, jsonBuilder, subName, subValue);
-                }
-
-            }
-            else
-            {
-                BreakdownStringArrayOrNumber(type, jsonBuilder, name, value);
-            }
+            BreakdownJsonObject(jsonBuilder, name, value);
         }
         
         return "{" + jsonBuilder + "}";
     }
 
-    private void BreakdownStringArrayOrNumber(Type type, StringBuilder jsonBuilder, string name, object value)
+    private void BreakdownJsonObject(StringBuilder jsonBuilder, string name, object value)
     {
+        var type = value.GetType();
         if (type == typeof(string))
         {
             jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":\"{value}\""));
@@ -46,9 +30,23 @@ public class CustomEncoder
         {
             BuildArrayBlob(value, jsonBuilder, name);
         }
-        else
+        else if (type == typeof(int) || type == typeof(byte) || type == typeof(double))
         {
             jsonBuilder.Append(TextToAppend(jsonBuilder, $"\"{name}\":{value}"));
+        }
+        else
+        {
+            var subProperties = value.GetType().GetProperties();
+                var objectBuilder = new StringBuilder();
+                jsonBuilder.Append($"\"{name}\":" + "{");
+                foreach (var subProperty in subProperties)
+                {
+                    var subName = subProperty.Name;
+                    var subPropertyInfo = type.GetProperty(subName);
+                    var subValue = subPropertyInfo.GetValue(value, null);
+                    BreakdownJsonObject(objectBuilder, subName, subValue);
+                }
+                jsonBuilder.Append($"{objectBuilder}" + '}');
         }
     }
 

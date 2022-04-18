@@ -16,28 +16,27 @@ public class CustomEncoder
             var type = value.GetType();
             if (_numericTypes.Contains(type))
             {
-                stringBuilder.Append(stringBuilder.Length == 0
-                    ?  $"\"{name}\":{value}"
-                    : $",\"{name}\":{value}");  
+                stringBuilder.Append(TextToAppend(stringBuilder, $"\"{name}\":{value}"));
             }
             else if (type == typeof(string[]))
             {
                 foreach (var item in (string[]) value)
                 {
-                    stringBuilder.Append(stringBuilder.Length == 0
-                        ? $"\"{name}\":[\"{item}\"]"
-                        : $",\"{name}\":[\"{item}\"]");
+                    stringBuilder.Append(TextToAppend(stringBuilder, $"\"{name}\":[\"{item}\"]"));
                 }
             }
             else
             {
-                stringBuilder.Append(stringBuilder.Length == 0
-                    ? $"\"{name}\":\"{value}\""
-                    : $",\"{name}\":\"{value}\"");
+                stringBuilder.Append(TextToAppend(stringBuilder, $"\"{name}\":\"{value}\""));
             }
         }
         
         return "{" + stringBuilder + "}";
+    }
+
+    private string TextToAppend(StringBuilder jsonBlob, string text)
+    {
+        return jsonBlob.Length == 0 ? text : $",{text}";
     }
 
     readonly HashSet<Type> _numericTypes = new()

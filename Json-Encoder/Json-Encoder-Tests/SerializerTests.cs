@@ -60,11 +60,26 @@ public class SerializerTests
         var actual = _sut.Create(objectWithMultipleStringProps);
         Assert.Equal(JsonConvert.SerializeObject(objectWithMultipleStringProps), actual);
     }
+    [Fact]
+    public void GivenAnObjectWithMultipleStringArrayValueReturnEncodedJsonString()
+    {
+        var objectWithMultipleStringProps = new {anotherThing = new []{"hi","bye","moo"}};
+        var actual = _sut.Create(objectWithMultipleStringProps);
+        Assert.Equal(JsonConvert.SerializeObject(objectWithMultipleStringProps), actual);
+    }
     
     [Fact]
     public void GivenAnObjectWithAnNumberArrayValueReturnEncodedJsonString()
     {
         var numberArray = new {anotherThing = new []{1,2,3}};
+        var actual = _sut.Create(numberArray);
+        Assert.Equal(JsonConvert.SerializeObject(numberArray), actual);
+    }
+    
+    [Fact]
+    public void GivenAnObjectWithAnNumberArrayAndStringValueReturnEncodedJsonString()
+    {
+        var numberArray = new {why = "No", anotherThing = new []{1,2,3}};
         var actual = _sut.Create(numberArray);
         Assert.Equal(JsonConvert.SerializeObject(numberArray), actual);
     }

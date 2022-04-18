@@ -27,7 +27,7 @@ public class CustomEncoder
                         ? TextToAppend(arrayBuilder, $"\"{item}\"")
                         : TextToAppend(arrayBuilder, $"{item}"));
                 }
-                jsonBuilder.Append($"\"{name}\":[{arrayBuilder}]");
+                jsonBuilder.Append(TextToAppend(jsonBuilder,$"\"{name}\":[{arrayBuilder}]"));
             }
             else
             {

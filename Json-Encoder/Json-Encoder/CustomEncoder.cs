@@ -14,7 +14,9 @@ public class CustomEncoder
             var name = property.Name;
             var temp = objectToBeEncoded.GetType().GetProperty(name);
             var value = (string) temp.GetValue(objectToBeEncoded, null);
-            stringBuilder.Append($"\"{name}\":\"{value}\"");
+            stringBuilder.Append(stringBuilder.Length == 0
+                ?  $"\"{name}\":\"{value}\""
+                : $",\"{name}\":\"{value}\"");
         }
         
         return "{" + stringBuilder + "}";

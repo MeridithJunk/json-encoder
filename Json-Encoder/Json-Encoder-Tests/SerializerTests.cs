@@ -13,10 +13,19 @@ public class UnitTest1
     };
     
     [Fact]
-    public void GivenAnObjectReturnEncodedJsonString()
+    public void GivenAnObjectWithOneStringPropertyReturnEncodedJsonString()
     {
         var sut = new CustomEncoder();
         var actual = sut.Create(example);
         Assert.Equal(JsonConvert.SerializeObject(example), actual);
+    }
+    
+    [Fact]
+    public void GivenAnObjectWithMultipleStringPropertiesReturnEncodedJsonString()
+    {
+        var sut = new CustomEncoder();
+        var objectWithMultipleStringProps = new {anotherThing = "somethingElse", moo = "cow"};
+        var actual = sut.Create(objectWithMultipleStringProps);
+        Assert.Equal(JsonConvert.SerializeObject(objectWithMultipleStringProps), actual);
     }
 }

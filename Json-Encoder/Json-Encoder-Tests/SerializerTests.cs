@@ -26,4 +26,12 @@ public class SerializerTests
         var actual = _sut.Create(objectWithMultipleStringProps);
         Assert.Equal(JsonConvert.SerializeObject(objectWithMultipleStringProps), actual);
     }
+    
+    [Fact]
+    public void GivenAnObjectWithAStringAndIntValueReturnEncodedJsonString()
+    {
+        var objectWithMultipleStringProps = new {anotherThing = "somethingElse", moo = 1};
+        var actual = _sut.Create(objectWithMultipleStringProps);
+        Assert.Equal(JsonConvert.SerializeObject(objectWithMultipleStringProps), actual);
+    }
 }

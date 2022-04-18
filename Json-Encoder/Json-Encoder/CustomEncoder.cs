@@ -11,11 +11,20 @@ public class CustomEncoder
         foreach (var property in properties)
         {
             var name = property.Name;
-            var temp = objectToBeEncoded.GetType().GetProperty(name);
-            var value = (string) temp.GetValue(objectToBeEncoded, null);
-            stringBuilder.Append(stringBuilder.Length == 0
-                ?  $"\"{name}\":\"{value}\""
-                : $",\"{name}\":\"{value}\"");
+            var propertyInfo = objectToBeEncoded.GetType().GetProperty(name);
+            var value = propertyInfo.GetValue(objectToBeEncoded, null);
+            if (value.GetType() == typeof(int))
+            {
+                stringBuilder.Append(stringBuilder.Length == 0
+                    ?  $"\"{name}\":{value}"
+                    : $",\"{name}\":{value}");  
+            }
+            else
+            {
+                stringBuilder.Append(stringBuilder.Length == 0
+                    ? $"\"{name}\":\"{value}\""
+                    : $",\"{name}\":\"{value}\"");
+            }
         }
         
         return "{" + stringBuilder + "}";
